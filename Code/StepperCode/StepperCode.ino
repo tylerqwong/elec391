@@ -1,24 +1,3 @@
-/* Stepper Copal
- * -------------
- *
- * Program to drive a stepper motor coming from a 5'25 disk drive
- * according to the documentation I found, this stepper: "[...] motor 
- * made by Copal Electronics, with 1.8 degrees per step and 96 ohms 
- * per winding, with center taps brought out to separate leads [...]"
- * [http://www.cs.uiowa.edu/~jones/step/example.html]
- *
- * It is a unipolar stepper motor with 5 wires:
- * 
- * - red: power connector, I have it at 5V and works fine
- * - orange and black: coil 1
- * - brown and yellow: coil 2
- *
- * (cleft) 2005 DojoDave for K3
- * http://www.0j0.org | http://arduino.berlios.de
- *
- * @author: David Cuartielles
- * @date: 20 Oct. 2005
- */
 
 #define CCW 0
 #define CW 1
