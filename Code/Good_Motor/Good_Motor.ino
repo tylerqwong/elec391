@@ -46,7 +46,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-ISR(TIMER1_OVF_vect) //interrupts service routine
+ISR(TIMER1_OVF_vect) //interrupt service routine
 {
   TCNT1 = 56000;
   if (motor_state == 0)
@@ -63,6 +63,7 @@ ISR(TIMER1_OVF_vect) //interrupts service routine
 
 
 void loop() {
+
   
   if (Serial.available() > 0) {
     angle_input = Serial.parseInt();   
@@ -85,15 +86,15 @@ void loop() {
     if(dir == CCW)
     {
       angle_counter = angle_counter + 3.6;
-      if (angle_counter >= 360)
-        angle_counter = angle_counter - 360;
+     // if (angle_counter >= 360)
+       // angle_counter = angle_counter - 360;
       lastRead = Read;
     }
     else
     {
       angle_counter = angle_counter - 3.6;
-      if (angle_counter < 0)
-        angle_counter = angle_counter + 360;
+     // if (angle_counter < 0)
+       // angle_counter = angle_counter + 360;
       lastRead = Read;
     } 
   }
@@ -148,6 +149,8 @@ void loop() {
 
     dir = CW;
 
+    
+
     if (motor_state == 0) 
     {
       digitalWrite(motorPin1, HIGH);
@@ -184,6 +187,7 @@ void loop() {
       digitalWrite(motorPin3, LOW);
       digitalWrite(motorPin4, LOW);
     } 
+    
   
   }
 
