@@ -1,0 +1,10 @@
+Added Component: Designator=J4(Molex Mini-Fit Jr)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=VCC Pin=J4-1
+Added Pin To Net: NetName=+5V Pin=J4-2
+Added Pin To Net: NetName=GND Pin=J4-3
+Added Pin To Net: NetName=GND Pin=J4-4
+Added Pin To Net: NetName=GND Pin=J4-5
+Added Pin To Net: NetName=GND Pin=J4-6
+Added Member To Class: ClassName=Motor_Driver Member=Component J4 Molex Mini-Fit Jr 45732
+Added Room: Name=Motor_Driver
