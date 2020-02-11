@@ -1,0 +1,34 @@
+Name     Motor_Driver_V1 ;
+PartNo   00 ;
+Date     2020-02-11 ;
+Revision 01 ;
+Designer Engineer ;
+Company  UBC ;
+Assembly None ;
+Location  ;
+Device   g16v8 ;
+
+/* *************** INPUT PINS *********************/
+PIN    2 = PLD_IN1; 	 
+PIN    3 = PLD_IN2; 	 
+PIN    4 = PLD_IN3; 	 
+
+/* *************** OUTPUT PINS *********************/
+PIN    19 = PLD_OUT1; 
+PIN    18 = PLD_OUT2; 
+PIN    17 = PLD_OUT3; 
+PIN    16 = PLD_OUT4;
+PIN    15 = PLD_OUT5; 
+PIN    14 = PLD_OUT6; 
+PIN    13 = PLD_EN  ;	
+
+PLD_EN = !( ([!PLD_IN1, !PLD_IN2, !PLD_IN3]:&)#([PLD_IN1, PLD_IN2, PLD_IN3]:&) );	/* Always set except in state 0 and 7 */
+
+PLD_OUT1 = ([!PLD_IN1, !PLD_IN2, PLD_IN3]:&)#([PLD_IN1, PLD_IN2, !PLD_IN3]:&) ; 	/* Only set in state 1 and 6 */
+PLD_OUT2 = ([!PLD_IN1, PLD_IN2, PLD_IN3]:&)#([PLD_IN1, !PLD_IN2, !PLD_IN3]:&) ; 	/* Only set in state 3 and 4 */
+PLD_OUT3 = ([!PLD_IN1, !PLD_IN2, PLD_IN3]:&)#([!PLD_IN1, PLD_IN2, !PLD_IN3]:&) ; 	/* Only set in state 1 and 2 */
+PLD_OUT4 = ([PLD_IN1, !PLD_IN2, !PLD_IN3]:&)#([PLD_IN1, !PLD_IN2, PLD_IN3]:&) ;	/* Only set in state 4 and 5 */
+PLD_OUT5 = ([!PLD_IN1, PLD_IN2, !PLD_IN3]:&)#([!PLD_IN1, PLD_IN2, PLD_IN3]:&) ;	/* Only set in state 2 and 3 */
+PLD_OUT6 = ([PLD_IN1, !PLD_IN2, PLD_IN3]:&)#([PLD_IN1, PLD_IN2, !PLD_IN3]:&) ;	/* Only set in state 5 and 6 */
+
+
