@@ -20,7 +20,7 @@ int motor1_2 = 9;
 int motor1_3 = 10;
 //Motor 2 Logic
 int motor2_1 = 5;
-int motor2_2 = 6;
+int motor2_2 = 4;
 int motor2_3 = 7;
 
 int pin13 = 13;
@@ -53,14 +53,28 @@ int CCW_state_10;
 int CCW_state_11;
 int CCW_state_12;
 
+int pwm_pin = 6;
+
+//motor pin 1 hotfix
+int motorpin1 = 7;
+
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(A, INPUT);
   pinMode(B, INPUT);
   
+  pinMode(pwm_pin, OUTPUT);
+  analogWrite(pwm_pin, 255);
+  
+  
   //Logic Power Supply to PCB
   pinMode(pin13, OUTPUT);
   digitalWrite(pin13, HIGH);
+
+  //Hotfix
+  pinMode(motorpin1, OUTPUT);
+  digitalWrite(motorpin1, LOW);
 
   //Motor Logic Pins
   pinMode(motor1_1, OUTPUT);
@@ -154,45 +168,54 @@ void isrA() {
 
 void motor_driver() {
  //Motor controller CCW
+    
     if(motor_state == 0) {
       digitalWrite(motor1_1, LOW);
       digitalWrite(motor1_2, LOW);
       digitalWrite(motor1_3, LOW);
+      digitalWrite(motorpin1, LOW);
     }
     else if ((motor_state == 1)||(motor_state == 7)) {
       digitalWrite(motor1_1, LOW);
       digitalWrite(motor1_2, LOW);
       digitalWrite(motor1_3, HIGH);
+      digitalWrite(motorpin1, HIGH);
     }    
     else if ((motor_state == 2)||(motor_state == 8)) {
       digitalWrite(motor1_1, LOW);
       digitalWrite(motor1_2, HIGH);
       digitalWrite(motor1_3, LOW);
+      digitalWrite(motorpin1, LOW);
     }
     else if ((motor_state == 3)||(motor_state == 9)) {
       digitalWrite(motor1_1, LOW);
       digitalWrite(motor1_2, HIGH);
       digitalWrite(motor1_3, HIGH);
+      digitalWrite(motorpin1, LOW);
     }
     else if ((motor_state == 4)||(motor_state == 10)) {
       digitalWrite(motor1_1, HIGH);
       digitalWrite(motor1_2, LOW);
       digitalWrite(motor1_3, LOW);
+      digitalWrite(motorpin1, LOW);
     }
     else if ((motor_state == 5)||(motor_state == 11)) {
       digitalWrite(motor1_1, HIGH);
       digitalWrite(motor1_2, LOW);
       digitalWrite(motor1_3, HIGH);
+      digitalWrite(motorpin1, LOW);
     }
     else if ((motor_state == 6)||(motor_state == 12)) {
       digitalWrite(motor1_1, HIGH);
       digitalWrite(motor1_2, HIGH);
       digitalWrite(motor1_3, LOW);
+      digitalWrite(motorpin1, HIGH);
     }
     else {
       digitalWrite(motor1_1, LOW);
       digitalWrite(motor1_2, LOW);
       digitalWrite(motor1_3, LOW);
+      digitalWrite(motorpin1, LOW);
     }
 
 }
