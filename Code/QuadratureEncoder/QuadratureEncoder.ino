@@ -1,5 +1,5 @@
-#define CCW 0
-#define CW 1
+#define CW 0
+#define CCW 1
 
 int dir = CW;
 
@@ -14,7 +14,7 @@ int oldA = 0;
 int oldB = 0;
 
 volatile int counter = 0;
-volatile byte flag = 0;
+volatile int rotation_counter = 0;
 
 //Motor state variables
 int motor_state = 0;
@@ -26,12 +26,12 @@ int motor1_2 = 9;
 int motor1_3 = 10;
 
 //Motor 2 Logic
-int motor2_1 = 5;
-int motor2_2 = 4;
-int motor2_3 = 7;
+int motor2_1;
+int motor2_2;
+int motor2_3;
 
 //Logic Power Supply
-int pin13 = 13;
+int Logic_power = 13;
 
 //Motor calibration position
 //CW
@@ -69,7 +69,7 @@ int motorpin1 = 7;
 
 //PID Variables and Constants
 int run_pid = 0;
-int counter_error;
+int error;
 int counter_setpoint;
 int counter_prev_error = 0;
 
@@ -81,8 +81,16 @@ int kp = 1;
 int ki;
 int kd;
 
+//Input Setpoints
+int motor_state_setpoint = 1;
+int rotation_counter_setpoint = 200;
+int final_motor_state;
+int last_motor_state;
+int setpoint;
+int stop_motor = 0;
 
 void setup() {
+  /*
   //Initialize timer1
   noInterrupts();
   TCCR1A = 0;
@@ -91,6 +99,7 @@ void setup() {
   TCCR1B |= (1 << CS12);  //256 prescaler
   TIMSK1 |= (1 << TOIE1);   //enable timer overflow interrupt
   interrupts();
+  */
 
   //Set encoder pins to input
   pinMode(A, INPUT);
@@ -102,8 +111,8 @@ void setup() {
   
   
   //Logic Power Supply to PCB
-  pinMode(pin13, OUTPUT);
-  digitalWrite(pin13, HIGH);
+  pinMode(Logic_power, OUTPUT);
+  digitalWrite(Logic_power, HIGH);
 
   //Hotfix (yellow wire to PLD)
   pinMode(motorpin1, OUTPUT);
@@ -113,6 +122,7 @@ void setup() {
   pinMode(motor1_1, OUTPUT);
   pinMode(motor1_2, OUTPUT);
   pinMode(motor1_3, OUTPUT);
+  /*
   pinMode(motor2_1, OUTPUT);
   pinMode(motor2_2, OUTPUT);
   pinMode(motor2_3, OUTPUT);
@@ -121,6 +131,7 @@ void setup() {
   digitalWrite(motor2_1, LOW);
   digitalWrite(motor2_2, LOW);
   digitalWrite(motor2_3, LOW);
+  */
 
   Serial.begin(9600);
 
@@ -135,39 +146,45 @@ void setup() {
   if(motor_cal_err == 0)
     break;
   }
+  rotation_counter = 0;
+  setpoint = rotation_counter_setpoint*12 + motor_state_setpoint;
 }
 
 
 
-void loop() {
-  //Print position to serial monitor and clear the interrupt flag
- /*
-  if (flag == 1) {
-    Serial.print("Position: ");
-    Serial.println(counter);
-    flag = 0;
-  }
-*/
+void loop() {  
   //PID control
-  if(run_pid == 1)
+  //if(run_pid == 1)
     pid();
 
   //Motor control and driver functions
   motor_control();
   motor_driver();
-}
 
-ISR(TIMER1_OVF_vect) //interrupt service routine
-{
-  run_pid = 1;
-  TCNT1 = 62412;
+/*
+  if(final_motor_state > 60)
+    rotation_counter_setpoint = rotation_counter_setpoint * (-1);
+    */
 }
+/*
+ISR(TIMER1_OVF_vect) //interrupt service routine for timer 1
+{
+  //run_pid = 1; //flag to start PID loop
+  TCNT1 = 62412; //Timer runs between 62412 and 65536 for 20Hz PID refresh 
+  if(last_motor_state == motor_state)
+    final_motor_state++;
+  else
+    final_motor_state = 0;
+
+  last_motor_state = motor_state;
+  
+}
+*/
 
 void isrA() {
-  //flag = 1;
   curA = digitalRead(A);
   curB = digitalRead(B);
-  //add 1 to count for CW
+  //add 1 to count for CW or -1 for CCW
     if(curA && !curB && !oldA && !oldB) //CW
     {
       counter++;
@@ -204,41 +221,71 @@ void isrA() {
       counter = counter;
 
    if (counter >= 400)
+   {
     counter = counter - 400;
+    rotation_counter++;
+   }
 
    if (counter < 0)
+   {
     counter = counter + 400;
+    rotation_counter--;
+   }
 
     oldA = curA;
     oldB = curB;
 }
-
+/*
 void calc_param() {
-  //DO THIS
+
 }
-
+*/
 void pid() {
-  counter_error = counter_setpoint - counter;
-  abs(counter_error);
-  PID_p = kp * counter_error;
-  /*
-  float count_difference = counter_error - counter_prev_error;
-  PID_d = kd * ((counter_error - counter_prev_error)/period);
+  error = setpoint - (rotation_counter*12 + motor_state);
 
-  if (-3 < counter_error && counter_error < 3)
+  if(error > 0)
+    dir = CW;
+  else
+    dir = CCW;
+    
+  abs(error);
+  PID_p = kp * error;
+  /*
+  float difference = error - prev_error;
+  PID_d = kd * ((error - prev_error)/period);
+
+  if (-3 < counter_error && error < 3)
     PID_i = PID_i + (ki * distance_error);
   else
     PID_i = 0;
+  PID_total = PID_p + PID_i + PID_d;
   */
-  //PID_total = PID_p + PID_i + PID_d;
   PID_total = PID_p;
-  PID_total = map(PID_total,0,399,0,255);
-  analogWrite(pwm_pin, PID_total);
-
-  //counter_prev_error = counter_error;
+  //PID_total = map(PID_total,0,399,0,255);
   
-  //End of pid
-  run_pid = 0;
+  if (PID_total > 12)
+  {
+    analogWrite(pwm_pin, 255);
+    stop_motor = 0;
+  }
+  
+  else if (PID_total > 0)
+  {
+    analogWrite(pwm_pin, 200);
+    stop_motor = 0;
+  }
+  
+  else  
+  {
+    analogWrite(pwm_pin, 255);
+    stop_motor = 1;
+  }
+  
+  //counter_prev_error = counter_error;  
+
+  //End of pid, use this with ISR
+  //run_pid = 0; //turn PID flag off
+  
 }
 
 void motor_driver() {
@@ -297,66 +344,119 @@ void motor_driver() {
 
 void motor_control() {
   //CW Direction
-    if ((counter < (CW_state_2 + 5)) && (counter > (CW_state_2 - 5)))
-    {
-      motor_state = 1;
-      counter_setpoint = CW_state_1;
-    } 
-    else if ((counter < (CW_state_1 + 5)) && (counter > (CW_state_1 - 5)))
+  if(stop_motor) {
+    motor_state = motor_state_setpoint;
+  }
+  else if(dir == CW) {
+     
+    if ((counter < (CW_state_1 + 5)) && (counter > (CW_state_1 - 5)))
     {
       motor_state = 12;
-      counter_setpoint = CW_state_12;
     }  
     else if ((counter < (CW_state_12 + 5)) && (counter > (CW_state_12 - 5)))
     {
       motor_state = 11;
-      counter_setpoint = CW_state_11;
     }  
     else if ((counter < (CW_state_11 + 5)) && (counter > (CW_state_11 - 5)))
    {
       motor_state = 10;
-      counter_setpoint = CW_state_10;
    }  
     else if ((counter < (CW_state_10 + 5)) && (counter > (CW_state_10 - 5)))
     {
       motor_state = 9;
-      counter_setpoint = CW_state_9;
     }    
     else if ((counter < (CW_state_9 + 5)) && (counter > (CW_state_9 - 5)))
     {
       motor_state = 8;
-      counter_setpoint = CW_state_8;
     }  
     else if ((counter < (CW_state_8 + 5)) && (counter > (CW_state_8 - 5)))
     {
       motor_state = 7;
-      counter_setpoint = CW_state_7;
     }  
     else if ((counter < (CW_state_7 + 5)) && (counter > (CW_state_7 - 5)))
     {
       motor_state = 6;
-      counter_setpoint = CW_state_6;
     }  
     else if ((counter < (CW_state_6 + 5)) && (counter > (CW_state_6 - 5)))
     {
       motor_state = 5;
-      counter_setpoint = CW_state_5;
     }  
     else if ((counter < (CW_state_5 + 5)) && (counter > (CW_state_5 - 5)))
      {
       motor_state = 4;
-      counter_setpoint = CW_state_4;
     }  
     else if ((counter < (CW_state_4 + 5)) && (counter > (CW_state_4 - 5)))
     {
       motor_state = 3;
-      counter_setpoint = CW_state_3;
     }   
     else if ((counter < (CW_state_3 + 5)) && (counter > (CW_state_3 - 5)))
     {
       motor_state = 2;
-      counter_setpoint = CW_state_2;
     }  
+    else if ((counter < (CW_state_2 + 5)) && (counter > (CW_state_2 - 5)))
+    {
+      motor_state = 1;
+    }
+    else
+      motor_state = 0;
+    
+  }
+  else if(dir == CCW) {
+    if ((counter < (CCW_state_12 + 5)) && (counter > (CCW_state_12 - 5)))
+    {
+      motor_state = 1;
+    } 
+    else if ((counter < (CCW_state_1 + 5)) && (counter > (CCW_state_1 - 5)))
+    {
+      motor_state = 2;
+    } 
+    else if ((counter < (CCW_state_2 + 5)) && (counter > (CCW_state_2 - 5)))
+    {
+      motor_state = 3;
+    } 
+    else if ((counter < (CCW_state_3 + 5)) && (counter > (CCW_state_3 - 5)))
+    {
+      motor_state = 4;
+    }
+    else if ((counter < (CCW_state_4 + 5)) && (counter > (CCW_state_4 - 5)))
+    {
+      motor_state = 5;
+    }
+    else if ((counter < (CCW_state_5 + 5)) && (counter > (CCW_state_5 - 5)))
+    {
+      motor_state = 6;
+    }
+    else if ((counter < (CCW_state_6 + 5)) && (counter > (CCW_state_6 - 5)))
+    {
+      motor_state = 7;
+    }
+    else if ((counter < (CCW_state_7 + 5)) && (counter > (CCW_state_8 - 5)))
+    {
+      motor_state = 8;
+    }
+    else if ((counter < (CCW_state_8 + 5)) && (counter > (CCW_state_8 - 5)))
+    {
+      motor_state = 9;
+    }
+    else if ((counter < (CCW_state_9 + 5)) && (counter > (CCW_state_9 - 5)))
+    {
+      motor_state = 10;
+    }
+    else if ((counter < (CCW_state_10 + 5)) && (counter > (CCW_state_10 - 5)))
+    {
+      motor_state = 11;
+    }
+    else if ((counter < (CCW_state_11 + 5)) && (counter > (CCW_state_11 - 5)))
+    {
+      motor_state = 12;
+    }
+    else
+    {
+      motor_state = 0;
+    }
+  }
+  else
+    motor_state = 0;
 }
 
 
@@ -757,6 +857,13 @@ void motor_calibration_test() {
    Serial.println(counter);
    if ((counter > (CCW_state_12+5)) || (counter < (CCW_state_12-5)))
     motor_cal_err = 1;
+
+   motor_state = 1;
+   motor_driver();
+   delay(1000);
+   Serial.print("state_1: ");
+   Serial.println(counter);
+     
    if(motor_cal_err == 0)
     Serial.println("CCW Calibration Test Passed."); 
    else
