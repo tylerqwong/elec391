@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=10 Pin=H3-10
+Removed Pin From Net: NetName=11 Pin=H3-11
+Removed Pin From Net: NetName=12 Pin=H3-12
+Removed Pin From Net: NetName=13 Pin=H3-13
+Removed Pin From Net: NetName=17 Pin=H3-17
+Removed Pin From Net: NetName=18 Pin=H3-18
+Removed Pin From Net: NetName=19 Pin=H3-19
+Removed Pin From Net: NetName=20 Pin=H3-20
+Removed Pin From Net: NetName=21 Pin=H3-21
+Removed Pin From Net: NetName=GND Pin=H3-GND
+Removed Pin From Net: NetName=GND Pin=H3-GND
+Removed Pin From Net: NetName=VDD Pin=H3-Vdd
+Removed Member From Class: ClassName=Motor_Driver Member=H3
+Added Room: Name=Motor_Driver

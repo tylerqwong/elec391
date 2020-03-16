@@ -1,0 +1,4 @@
+Added Pin To Net: NetName=GND Pin=Z1-0
+Added Pin To Net: NetName=Current Sense 1 Pin=Z1-1
+Added Pin To Net: NetName=GND Pin=Z2-0
+Added Pin To Net: NetName=Current Sense 2 Pin=Z2-1
