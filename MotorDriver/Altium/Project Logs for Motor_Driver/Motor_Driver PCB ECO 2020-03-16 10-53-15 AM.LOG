@@ -1,0 +1,36 @@
+Change Component Designator: OldDesignator= NewDesignator=CR1
+Change Component Designator: OldDesignator= NewDesignator=CR2
+Change Component Designator: OldDesignator= NewDesignator=CR3
+Change Component Designator: OldDesignator= NewDesignator=CR4
+Change Component Designator: OldDesignator= NewDesignator=CR5
+Change Component Designator: OldDesignator= NewDesignator=CR6
+Change Component Designator: OldDesignator= NewDesignator=CR7
+Change Component Designator: OldDesignator= NewDesignator=CR8
+Change Component Designator: OldDesignator= NewDesignator=CR9
+Change Component Designator: OldDesignator= NewDesignator=CR10
+Change Component Designator: OldDesignator= NewDesignator=CR11
+Change Component Designator: OldDesignator= NewDesignator=CR12
+Change Component Designator: OldDesignator= NewDesignator=H3
+Change Component Designator: OldDesignator= NewDesignator=U1
+Change Component Designator: OldDesignator=M1 NewDesignator=H1
+Change Component Designator: OldDesignator=M2 NewDesignator=H2
+Added Component: Designator=Z1(Zener, 1.5W, 3.3V, 1SMA5913BT3G)
+Add component. Clean all parameters for all variants
+Added Component: Designator=Z2(Zener, 1.5W, 3.3V, 1SMA5913BT3G)
+Add component. Clean all parameters for all variants
+Added Member To Class: ClassName=Motor_Driver Member=Component CR2 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR3 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR4 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR5 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR6 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR7 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR8 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR9 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR10 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR11 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component CR12 Part Number: SD1206S040S2R0
+Added Member To Class: ClassName=Motor_Driver Member=Component H3 Header 10
+Added Member To Class: ClassName=Motor_Driver Member=Component U1 Teensy 4.0
+Added Member To Class: ClassName=Motor_Driver Member=Component Z1 Zener, 1.5W, 3.3V, 1SMA5913BT3G
+Added Member To Class: ClassName=Motor_Driver Member=Component Z2 Zener, 1.5W, 3.3V, 1SMA5913BT3G
+Added Room: Name=Motor_Driver

@@ -1,0 +1,31 @@
+Added Component: Designator=U1(Teensy 4.0)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=M1_A Pin=U1-0
+Added Pin To Net: NetName=M1_B Pin=U1-1
+Added Pin To Net: NetName=M2_A Pin=U1-2
+Added Pin To Net: NetName=VDD Pin=U1-3.3V
+Added Pin To Net: NetName=M2_B Pin=U1-3
+Added Pin To Net: NetName=M1_1 Pin=U1-4
+Added Pin To Net: NetName=M1_2 Pin=U1-5
+Added Pin To Net: NetName=M1_3 Pin=U1-6
+Added Pin To Net: NetName=M2_1 Pin=U1-7
+Added Pin To Net: NetName=M2_2 Pin=U1-8
+Added Pin To Net: NetName=M2_3 Pin=U1-9
+Added Pin To Net: NetName=10 Pin=U1-10
+Added Pin To Net: NetName=11 Pin=U1-11
+Added Pin To Net: NetName=12 Pin=U1-12
+Added Pin To Net: NetName=13 Pin=U1-13
+Added Pin To Net: NetName=A0 Pin=U1-14
+Added Pin To Net: NetName=Current Sense 1 Pin=U1-15
+Added Pin To Net: NetName=Current Sense 2 Pin=U1-16
+Added Pin To Net: NetName=17 Pin=U1-17
+Added Pin To Net: NetName=18 Pin=U1-18
+Added Pin To Net: NetName=19 Pin=U1-19
+Added Pin To Net: NetName=20 Pin=U1-20
+Added Pin To Net: NetName=21 Pin=U1-21
+Added Pin To Net: NetName=M2_EN Pin=U1-22
+Added Pin To Net: NetName=M1_EN Pin=U1-23
+Added Pin To Net: NetName=GND Pin=U1-GND
+Added Pin To Net: NetName=GND Pin=U1-GND
+Added Member To Class: ClassName=Motor_Driver Member=Component U1 Teensy 4.0
+Added Room: Name=Motor_Driver
